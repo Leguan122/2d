@@ -79,19 +79,33 @@ function update() {
 }
 
 function draw() {
+    const cameraX = player.x - canvas.width / 2;
+    const cameraY = player.y - canvas.height / 2;
+
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Mriežka pozadia
+    const mapWidth = 2000;
+    const mapHeight = 2000;
+    for (let x = 0; x < mapWidth; x += 100) {
+        for (let y = 0; y < mapHeight; y += 100) {
+            ctx.strokeStyle = "#ccc";
+            ctx.strokeRect(x - cameraX, y - cameraY, 100, 100);
+        }
+    }
 
     // Hráč
     ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.size, player.size);
-    drawName(player.name || 'Ty', player.x, player.y);
+    ctx.fillRect(player.x - cameraX, player.y - cameraY, player.size, player.size);
+    drawName(player.name || 'Ty', player.x - cameraX, player.y - cameraY);
 
-    /// Ostatní hráči
+    // Ostatní hráči
     for (const id in otherPlayers) {
         const p = otherPlayers[id];
         ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, player.size, player.size);
-        drawName(p.name, p.x, p.y);
+        ctx.fillRect(p.x - cameraX, p.y - cameraY, player.size, player.size);
+        drawName(p.name, p.x - cameraX, p.y - cameraY);
     }
 }
 function drawName(name, x, y) {
