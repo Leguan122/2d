@@ -56,10 +56,10 @@ socket.on('playerDisconnected', (id) => {
 
 function update() {
     let moved = false;
-    if (keys['ArrowUp']) { player.y -= player.speed; moved = true; }
-    if (keys['ArrowDown']) { player.y += player.speed; moved = true; }
-    if (keys['ArrowLeft']) { player.x -= player.speed; moved = true; }
-    if (keys['ArrowRight']) { player.x += player.speed; moved = true; }
+    if (keys['w']) { player.y -= player.speed; moved = true; }
+    if (keys['s']) { player.y += player.speed; moved = true; }
+    if (keys['a']) { player.x -= player.speed; moved = true; }
+    if (keys['d']) { player.x += player.speed; moved = true; }
 
     if (moved) {
         socket.emit('move', { x: player.x, y: player.y });
