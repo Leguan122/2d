@@ -10,6 +10,7 @@ function resizeCanvas() {
 }
 window.addEventListener('resize', resizeCanvas);
 
+let playerName = '';
 const socket = io();
 
 // Lokálny hráč
@@ -35,6 +36,7 @@ socket.on('currentPlayers', (players) => {
             player.x = players[id].x;
             player.y = players[id].y;
             player.color = players[id].color;
+            player.name = players[id].name || 'Hráč';
         }
     }
 });
@@ -54,6 +56,16 @@ socket.on('playerDisconnected', (id) => {
     delete otherPlayers[id];
 });
 
+function startGame() {
+    playerName = document.getElementById('playerName').value.trim();
+    if (!playerName) return;
+
+    document.getElementById('nameForm').style.display = 'none';
+
+    // Pošli meno na server
+    socket.emit('setName', playerName);
+}
+
 function update() {
     let moved = false;
     if (keys['w']) { player.y -= player.speed; moved = true; }
@@ -72,13 +84,21 @@ function draw() {
     // Hráč
     ctx.fillStyle = player.color;
     ctx.fillRect(player.x, player.y, player.size, player.size);
+    drawName(player.name || 'Ty', player.x, player.y);
 
-    // Ostatní hráči
+    /// Ostatní hráči
     for (const id in otherPlayers) {
         const p = otherPlayers[id];
         ctx.fillStyle = p.color;
         ctx.fillRect(p.x, p.y, player.size, player.size);
+        drawName(p.name, p.x, p.y);
     }
+}
+function drawName(name, x, y) {
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.fillText(name, x + player.size / 2, y + player.size + 16);
 }
 
 function loop() {

@@ -6,7 +6,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div id="nameForm" class="overlay">
+    <h2>Zadaj svoje meno</h2>
+    <input type="text" id="playerName" placeholder="Tvoje meno">
+    <button onclick="startGame()">Vstúpiť do hry</button>
+</div>
+
 <canvas id="game"></canvas>
+
 <script src="/socket.io/socket.io.js"></script>
 <script src="main.js"></script>
 </body>

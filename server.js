@@ -16,18 +16,27 @@ let players = {};
 io.on('connection', (socket) => {
     console.log('Nový hráč:', socket.id);
 
+    socket.on('setName', (name) => {
+        if (players[socket.id]) {
+            players[socket.id].name = name;
+            // Oznám ostatným
+            socket.broadcast.emit('newPlayer', { id: socket.id, ...players[socket.id] });
+        }
+    });
+
     // Vytvor nového hráča
     players[socket.id] = {
         x: 100 + Math.random() * 400,
         y: 100 + Math.random() * 400,
-        color: '#' + Math.floor(Math.random()*16777215).toString(16)
+        color: '#' + Math.floor(Math.random()*16777215).toString(16),
+        name: ''
     };
 
     // Pošli novému hráčovi všetkých ostatných
     socket.emit('currentPlayers', players);
 
     // Informuj ostatných, že prišiel nový hráč
-    socket.broadcast.emit('newPlayer', { id: socket.id, ...players[socket.id] });
+    //socket.broadcast.emit('newPlayer', { id: socket.id, ...players[socket.id] });
 
     // Prijímaj aktualizácie pozície
     socket.on('move', (data) => {
