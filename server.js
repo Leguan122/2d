@@ -7,6 +7,18 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+const trees = {};
+let treeID = 1;
+
+for (let i = 0; i < 10; i++) {
+    const tree = {
+        x: Math.floor(Math.random() * 1900),
+        y: Math.floor(Math.random() * 1900),
+        size: Math.floor(Math.random() * 100)
+    }
+    trees[i] = tree;
+}
+
 // Slúži statické súbory z priečinka "public"
 app.use(express.static('public'));
 
@@ -15,6 +27,7 @@ let players = {};
 
 io.on('connection', (socket) => {
     console.log('Nový hráč:', socket.id);
+    socket.emit('trees', trees);
 
     socket.on('setName', (name) => {
         if (players[socket.id]) {
@@ -26,8 +39,8 @@ io.on('connection', (socket) => {
 
     // Vytvor nového hráča
     players[socket.id] = {
-        x: 100 + Math.random() * 400,
-        y: 100 + Math.random() * 400,
+        x: Math.floor(Math.random() * 1900),
+        y: Math.floor(Math.random() * 1900),
         color: '#' + Math.floor(Math.random()*16777215).toString(16),
         name: ''
     };

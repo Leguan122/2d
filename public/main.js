@@ -12,6 +12,7 @@ window.addEventListener('resize', resizeCanvas);
 
 let playerName = '';
 const socket = io();
+let trees = {};
 
 // Lokálny hráč
 const player = {
@@ -56,6 +57,9 @@ socket.on('playerDisconnected', (id) => {
     delete otherPlayers[id];
 });
 
+socket.on('trees', (data) => {
+    trees = data;
+})
 function startGame() {
     playerName = document.getElementById('playerName').value.trim();
     if (!playerName) return;
@@ -67,13 +71,18 @@ function startGame() {
 }
 
 function update() {
-    let moved = false;
-    if (keys['w']) { player.y -= player.speed; moved = true; }
-    if (keys['s']) { player.y += player.speed; moved = true; }
-    if (keys['a']) { player.x -= player.speed; moved = true; }
-    if (keys['d']) { player.x += player.speed; moved = true; }
+    let nextX = player.x;
+    let nextY = player.y;
 
-    if (moved) {
+    if (keys['w']) nextY -= player.speed;
+    if (keys['s']) nextY += player.speed;
+    if (keys['a']) nextX -= player.speed;
+    if (keys['d']) nextX += player.speed;
+
+    // kontrola kolízie
+    if (!collidesWithTree(nextX, nextY, player.size)) {
+        player.x = nextX;
+        player.y = nextY;
         socket.emit('move', { x: player.x, y: player.y });
     }
 }
@@ -99,6 +108,7 @@ function draw() {
     ctx.fillStyle = player.color;
     ctx.fillRect(player.x - cameraX, player.y - cameraY, player.size, player.size);
     drawName(player.name || 'Ty', player.x - cameraX, player.y - cameraY);
+    drawPosition(player, player.x - cameraX, player.y - cameraY)
 
     // Ostatní hráči
     for (const id in otherPlayers) {
@@ -107,12 +117,42 @@ function draw() {
         ctx.fillRect(p.x - cameraX, p.y - cameraY, player.size, player.size);
         drawName(p.name, p.x - cameraX, p.y - cameraY);
     }
+
+    for (const i in trees) {
+        ctx.fillStyle = "green";
+        ctx.fillRect(trees[i].x - cameraX, trees[i].y - cameraY, trees[i].size, trees[i].size);
+    }
+
+}
+
+function collidesWithTree(x, y, size) {
+    if (x < 0 || (x + size) > 2000) return true;
+    if (y < 0 || (y + size) > 2000) return true;
+
+    for (const i in trees) {
+        const dx = x + size / 2 - (trees[i].x + trees[i].size / 2);
+        const dy = y + size / 2 - (trees[i].y + trees[i].size / 2);
+        const dist = Math.hypot(dx, dy);
+
+        const minDist = (size + trees[i].size) / 2;
+        if (dist < minDist) {
+            return true; // kolízia
+        }
+    }
+    return false;
 }
 function drawName(name, x, y) {
     ctx.font = "14px Arial";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
     ctx.fillText(name, x + player.size / 2, y + player.size + 16);
+}
+
+function drawPosition(name, x, y) {
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.fillText(name.x, x + player.size / 2, y + player.size + 32);
 }
 
 function loop() {
