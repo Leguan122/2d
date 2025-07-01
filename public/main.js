@@ -12,13 +12,20 @@ window.addEventListener('resize', resizeCanvas);
 
 let playerName = '';
 const socket = io();
-let trees = {};
+let map = {};
+const TILE_SIZE = 32;
+const TILES_PER_ROW = 9; // 304 px šírka / 32 = 9 stĺpcov
+
+const rocks_tileSheet = new Image();
+rocks_tileSheet.src = './tiles/Rocks_source_no_shadow.png';
+const trees_tileSheet = new Image();
+trees_tileSheet.src = './tiles/Trees_shadow_source.png';
 
 // Lokálny hráč
 const player = {
     x: 200,
     y: 200,
-    size: 40,
+    size: 32,
     speed: 5,
     color: 'blue'
 };
@@ -57,8 +64,10 @@ socket.on('playerDisconnected', (id) => {
     delete otherPlayers[id];
 });
 
-socket.on('trees', (data) => {
-    trees = data;
+socket.on('initMap', (data) => {
+    map = data;
+    console.log('Mapa prijatá', map);
+    loop();
 })
 function startGame() {
     playerName = document.getElementById('playerName').value.trim();
@@ -79,8 +88,12 @@ function update() {
     if (keys['a']) nextX -= player.speed;
     if (keys['d']) nextX += player.speed;
 
+    // kolízia sa kontroluje pre stred hráča
+    const centerX = nextX + player.size / 2;
+    const centerY = nextY + player.size / 2;
+
     // kontrola kolízie
-    if (!collidesWithTree(nextX, nextY, player.size)) {
+    if (!isBlockedTile(centerX, centerY)) {
         player.x = nextX;
         player.y = nextY;
         socket.emit('move', { x: player.x, y: player.y });
@@ -94,15 +107,18 @@ function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Mriežka pozadia
-    const mapWidth = 2000;
-    const mapHeight = 2000;
-    for (let x = 0; x < mapWidth; x += 100) {
-        for (let y = 0; y < mapHeight; y += 100) {
-            ctx.strokeStyle = "#ccc";
-            ctx.strokeRect(x - cameraX, y - cameraY, 100, 100);
-        }
-    }
+    if (map) {drawMap(cameraX,cameraY)}
+    //drawMap(); // najprv vykreslíme mapu
+
+    // // Mriežka pozadia
+    // const mapWidth = 2000;
+    // const mapHeight = 2000;
+    // for (let x = 0; x < mapWidth; x += 100) {
+    //     for (let y = 0; y < mapHeight; y += 100) {
+    //         ctx.strokeStyle = "#ccc";
+    //         ctx.strokeRect(x - cameraX, y - cameraY, 100, 100);
+    //     }
+    // }
 
     // Hráč
     ctx.fillStyle = player.color;
@@ -118,28 +134,88 @@ function draw() {
         drawName(p.name, p.x - cameraX, p.y - cameraY);
     }
 
-    for (const i in trees) {
-        ctx.fillStyle = "green";
-        ctx.fillRect(trees[i].x - cameraX, trees[i].y - cameraY, trees[i].size, trees[i].size);
-    }
+
 
 }
 
-function collidesWithTree(x, y, size) {
-    if (x < 0 || (x + size) > 2000) return true;
-    if (y < 0 || (y + size) > 2000) return true;
+function drawMap(cameraX,cameraY) {
+    if (!map || map.length === 0) return;
 
-    for (const i in trees) {
-        const dx = x + size / 2 - (trees[i].x + trees[i].size / 2);
-        const dy = y + size / 2 - (trees[i].y + trees[i].size / 2);
-        const dist = Math.hypot(dx, dy);
+    const rows = map.length;
+    const cols = map[0].length;
 
-        const minDist = (size + trees[i].size) / 2;
-        if (dist < minDist) {
-            return true; // kolízia
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            const tile = map[y][x];
+            const screenX = x * TILE_SIZE - cameraX;
+            const screenY = y * TILE_SIZE - cameraY;
+
+            switch (tile) {
+                case 0: // tráva
+                    ctx.fillStyle = '#88cc88';
+                    ctx.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
+                    break;
+                case 1: // múr
+                    ctx.fillStyle = '#88cc88';
+                    ctx.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
+                    ctx.drawImage(
+                        rocks_tileSheet,
+                        32, 240, TILE_SIZE, TILE_SIZE,     // zdroj: x, y, šírka, výška
+                        screenX, screenY, TILE_SIZE, TILE_SIZE // cieľ: x, y, šírka, výška
+                    );
+                    break;
+                case 2: // strom
+                    //ctx.fillStyle = '#228B22';
+                    ctx.fillStyle = '#88cc88';
+                    ctx.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
+                    ctx.drawImage(
+                        trees_tileSheet,
+                        679, 89, TILE_SIZE, TILE_SIZE,     // zdroj: x, y, šírka, výška
+                        screenX, screenY, TILE_SIZE, TILE_SIZE // cieľ: x, y, šírka, výška
+                    );
+                    break;
+                default:
+                    ctx.fillStyle = 'magenta'; // neznáma hodnota
+            }
+
+
+            //drawTile(map[y][x], screenX, screenY);
+            // ctx.drawImage(
+            //     rocks_tileSheet,
+            //     0, 0, TILE_SIZE, TILE_SIZE,     // zdroj: x, y, šírka, výška
+            //     screenX, screenY, TILE_SIZE, TILE_SIZE // cieľ: x, y, šírka, výška
+            // );
         }
     }
-    return false;
+}
+
+function drawTile(tileId, screenX, screenY) {
+    const sx = (tileId % TILES_PER_ROW) * TILE_SIZE;
+    const sy = Math.floor(tileId / TILES_PER_ROW) * TILE_SIZE;
+
+    ctx.drawImage(
+        tileSheet,
+        sx, sy, TILE_SIZE, TILE_SIZE,     // zdroj: x, y, šírka, výška
+        screenX, screenY, TILE_SIZE, TILE_SIZE // cieľ: x, y, šírka, výška
+    );
+}
+
+function isBlockedTile(x, y) {
+    const tileX = Math.floor(x / TILE_SIZE);
+    const tileY = Math.floor(y / TILE_SIZE);
+
+    // mimo mapu = zablokované
+    if (
+        tileY < 0 || tileY >= map.length ||
+        tileX < 0 || tileX >= map[0].length
+    ) {
+        return true;
+    }
+
+    const tile = map[tileY][tileX];
+
+    // 1 = múr, 2 = strom → blokované
+    return tile === 1 || tile === 2;
 }
 function drawName(name, x, y) {
     ctx.font = "14px Arial";
@@ -161,4 +237,4 @@ function loop() {
     requestAnimationFrame(loop);
 }
 
-loop();
+

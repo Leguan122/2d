@@ -1,4 +1,5 @@
 // server.js
+
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -7,17 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const trees = {};
-let treeID = 1;
-
-for (let i = 0; i < 10; i++) {
-    const tree = {
-        x: Math.floor(Math.random() * 1900),
-        y: Math.floor(Math.random() * 1900),
-        size: Math.floor(Math.random() * 100)
-    }
-    trees[i] = tree;
-}
+const gameMap = require('./gameMap.json');
 
 // Slúži statické súbory z priečinka "public"
 app.use(express.static('public'));
@@ -27,7 +18,7 @@ let players = {};
 
 io.on('connection', (socket) => {
     console.log('Nový hráč:', socket.id);
-    socket.emit('trees', trees);
+    socket.emit('initMap', gameMap);
 
     socket.on('setName', (name) => {
         if (players[socket.id]) {
