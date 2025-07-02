@@ -9,6 +9,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 const gameMap = require('./gameMap.json');
+//const {player} = require("./public/js/player.js");
 
 // Slúži statické súbory z priečinka "public"
 app.use(express.static('public'));
@@ -30,10 +31,12 @@ io.on('connection', (socket) => {
 
     // Vytvor nového hráča
     players[socket.id] = {
-        x: Math.floor(Math.random() * 1900),
-        y: Math.floor(Math.random() * 1900),
+        x: 1000,
+        y: 1000,
         color: '#' + Math.floor(Math.random()*16777215).toString(16),
-        name: ''
+        name: '',
+        direction: 'down',
+
     };
 
     // Pošli novému hráčovi všetkých ostatných
@@ -47,7 +50,8 @@ io.on('connection', (socket) => {
         if (players[socket.id]) {
             players[socket.id].x = data.x;
             players[socket.id].y = data.y;
-            io.emit('playerMoved', { id: socket.id, x: data.x, y: data.y });
+            players[socket.id].direction = data.direction;
+            io.emit('playerMoved', { id: socket.id, x: data.x, y: data.y, direction: data.direction });
         }
     });
 
@@ -58,6 +62,10 @@ io.on('connection', (socket) => {
         io.emit('playerDisconnected', socket.id);
     });
 });
+
+setInterval(() => {
+    io.emit('playersState', players); // objekt so všetkými hráčmi
+}, 1000 / 30);
 
 server.listen(3000, () => {
     console.log('Server beží na http://localhost:3000');

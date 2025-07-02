@@ -2,19 +2,19 @@
 <html lang="sk">
 <head>
     <meta charset="UTF-8">
-    <title>Multiplayer 2D</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Multiplayer Hra</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<div id="nameForm" class="overlay">
-    <h2>Zadaj svoje meno</h2>
-    <input type="text" id="playerName" placeholder="Tvoje meno" maxlength="6">
-    <button onclick="startGame()">Vstúpiť do hry</button>
+<div id="nameForm">
+    <input type="text" id="playerName" placeholder="Zadaj meno">
+    <button onclick="startGame()">Spustiť hru</button>
 </div>
 
-<canvas id="game"></canvas>
+<canvas id="gameCanvas"></canvas>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="main.js"></script>
+<script type="module" src="/main.js"></script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 </body>
 </html>
