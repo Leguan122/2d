@@ -1,6 +1,6 @@
 // main.js
 import { initSocketHandlers } from './js/socket.js';
-import { loop } from './js/gameLoop.js';
+import { loop } from './js/gameloop.js';
 import { setupInput } from './js/input.js';
 import { player, setPlayerName } from './js/player.js';
 
