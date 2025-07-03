@@ -4,6 +4,7 @@ import { isBlockedTile } from './map.js';
 import {drawCharacterIdle, drawCharacterWalk} from "./character.js";
 
 export const player = {
+    id: 0,
     x: 1000,
     y: 1000,
     size: 32,
@@ -51,6 +52,7 @@ export function updatePlayer(keys) {
          player.moving = true;
      } else {
          player.moving = false;
+         socket.emit('stop_moving', { x: player.x, y: player.y, direction: player.direction });
      }
 }
 

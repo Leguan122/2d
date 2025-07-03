@@ -5,7 +5,7 @@ let map = [];
 
 export function setMap(data) {
     map = data;
-    console.log(map)
+    //console.log(map)
 }
 
 export function drawMap(ctx, cameraX, cameraY) {

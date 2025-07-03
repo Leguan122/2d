@@ -31,16 +31,18 @@ io.on('connection', (socket) => {
 
     // Vytvor nového hráča
     players[socket.id] = {
+        id: socket.id,
         x: 1000,
         y: 1000,
-        color: '#' + Math.floor(Math.random()*16777215).toString(16),
         name: '',
         direction: 'down',
 
     };
 
     // Pošli novému hráčovi všetkých ostatných
-    socket.emit('currentPlayers', players);
+    //socket.emit('currentPlayers', players);
+
+    socket.emit('initData', socket.id);
 
     // Informuj ostatných, že prišiel nový hráč
     //socket.broadcast.emit('newPlayer', { id: socket.id, ...players[socket.id] });
@@ -51,7 +53,18 @@ io.on('connection', (socket) => {
             players[socket.id].x = data.x;
             players[socket.id].y = data.y;
             players[socket.id].direction = data.direction;
-            io.emit('playerMoved', { id: socket.id, x: data.x, y: data.y, direction: data.direction });
+            players[socket.id].moving = true;
+            //io.emit('playerMoved', { id: socket.id, x: data.x, y: data.y, direction: data.direction });
+        }
+    });
+
+    socket.on('stop_moving', (data) => {
+        if (players[socket.id]) {
+            players[socket.id].x = data.x;
+            players[socket.id].y = data.y;
+            players[socket.id].direction = data.direction;
+            players[socket.id].moving = false;
+           // io.emit('playerMoved', { id: socket.id, x: data.x, y: data.y, direction: data.direction });
         }
     });
 
