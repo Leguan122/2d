@@ -4,6 +4,8 @@ import { loop } from './js/gameloop.js';
 import { setupInput } from './js/input.js';
 import { player, setPlayerName } from './js/player.js';
 
+window.time = {}; // vytvoríš globálnu premennú
+
 // inicializácia
 setupInput();
 initSocketHandlers(player, () => {

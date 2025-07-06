@@ -5,6 +5,7 @@ import { drawMap } from './map.js';
 import { drawOtherPlayers } from './otherPlayers.js';
 import { drawName } from './drawUtils.js';
 import { updateCharacterAnimation } from './character.js';
+import { applyEnvironmentFilter } from './ctxFilters.js';
 
 const canvas = document.getElementById('gameCanvas');
 export const ctx = canvas.getContext('2d');
@@ -36,4 +37,7 @@ function draw(delta) {
     drawMap(ctx, cameraX, cameraY);
     drawOtherPlayers(ctx, cameraX, cameraY, delta);
     drawLocalPlayer(ctx, cameraX, cameraY, drawName);
+    // Aplikuj filter podľa serverového času
+
+    applyEnvironmentFilter(ctx, window.time);
 }

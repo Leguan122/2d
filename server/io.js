@@ -1,5 +1,6 @@
 const { Server } = require('socket.io');
 const { handlePlayerConnection } = require('./game/players');
+const {startTimeBroadcast} = require("./game/time");
 
 let io; // Socket.IO inštancia
 
@@ -12,6 +13,7 @@ function initSocket(server) {
     });
 
     console.log('✅ Socket.IO inicializovaný');
+    startTimeBroadcast(io);
 
     io.on('connection', (socket) => {
         console.log(`🔗 Hráč pripojený: ${socket.id}`);

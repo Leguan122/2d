@@ -53,4 +53,8 @@ export function initSocketHandlers(localPlayer, onReady) {
         player.id = data.id;
         initOtherPlayers(data.players);
     });
+
+    socket.on('timeUpdate', (data) => {
+        window.time = data;
+    })
 }
