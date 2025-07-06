@@ -1,6 +1,5 @@
 const players = {}; // Objekt so všetkými hráčmi
 const { gameMap } = require('../maps'); // načítaj mapu
-const { getIO } = require('../io');
 
 
 function handlePlayerConnection(socket, io) {
@@ -20,7 +19,8 @@ function handlePlayerConnection(socket, io) {
     // Pošli hráčovi jeho ID a ostatných hráčov
     socket.emit('initData', {
         id: socket.id,
-        players: players
+        players: players,
+        note: "serus"
     });
 
     // Informuj ostatných hráčov o novom hráčovi

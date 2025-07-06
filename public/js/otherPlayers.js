@@ -6,6 +6,27 @@ import {player} from "./player.js";
 
 const others = {};
 
+export function initOtherPlayers(players) {
+    for (const id in players) {
+        const p = players[id];
+        console.log("initOtherPlayers", id);
+        console.log("initOtherPlayers", players[id]);
+        if (player.id !== p.id){
+            others[id] = {
+                id: p.id,
+                x: p.x,
+                y: p.y,
+                targetX: p.x,
+                targetY: p.y,
+                name: p.name,
+                direction: p.direction,
+                moving: p.moving,
+                interpolationTime: 0
+            };
+        }
+    }
+}
+
 export function updateOtherPlayers(players) {
     for (const id in players) {
         const serverPlayer = players[id];
@@ -64,7 +85,7 @@ export function removeOtherPlayer(id) {
 }
 
 export function drawOtherPlayers(ctx, cameraX, cameraY, delta) {
-    console.log(others);
+    //console.log(others);
     for (const id in others) {
         const p = others[id];
         if (player.id !== p.id){
