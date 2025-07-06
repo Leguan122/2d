@@ -1,7 +1,7 @@
 // js/socket.js
 import { socket } from './socketClient.js';
 import { setMap } from './map.js';
-import { updateOtherPlayers, addOtherPlayer, removeOtherPlayer } from './otherPlayers.js';
+import {updateOtherPlayers, addOtherPlayer, removeOtherPlayer, updateOtherPlayer} from './otherPlayers.js';
 import {player} from "./player.js";
 
 export function initSocketHandlers(localPlayer, onReady) {
@@ -10,7 +10,7 @@ export function initSocketHandlers(localPlayer, onReady) {
     });
 
     socket.on('initMap', (serverMap) => {
-        //console.log("mapa");
+        console.log("mapa");
         setMap(serverMap);
         onReady();
     });
@@ -25,6 +25,7 @@ export function initSocketHandlers(localPlayer, onReady) {
     });
 
     socket.on('newPlayer', (player) => {
+        console.log("newPlayer", player);
         addOtherPlayer(player);
     });
 
@@ -32,15 +33,17 @@ export function initSocketHandlers(localPlayer, onReady) {
         removeOtherPlayer(id);
     });
 
-    // socket.on('playerMoved', (id) => {
-    //     console.log(id);
-    // });
+    socket.on('playerMoved', (data) => {
+        console.log(data);
+        updateOtherPlayer(data);
+    });
 
     // setInterval(() => {
     //     socket.emit('playerUpdate', localPlayer);
     // }, 1000 / 10);
 
     socket.on('initData', (id) => {
+        console.log("initData");
         player.id = id;
     });
 }

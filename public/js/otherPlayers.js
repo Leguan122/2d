@@ -35,6 +35,16 @@ export function updateOtherPlayers(players) {
     }
 }
 
+export function updateOtherPlayer(data) {
+    if (others[data.id]) {
+        others[data.id].targetX = data.x;
+        others[data.id].targetY = data.y;
+        others[data.id].direction = data.direction;
+        others[data.id].moving = data.moving;
+    }
+}
+
+
 export function addOtherPlayer(player) {
     others[player.id] = {
         id: player.id,
@@ -54,6 +64,7 @@ export function removeOtherPlayer(id) {
 }
 
 export function drawOtherPlayers(ctx, cameraX, cameraY, delta) {
+    console.log(others);
     for (const id in others) {
         const p = others[id];
         if (player.id !== p.id){
@@ -68,9 +79,9 @@ export function drawOtherPlayers(ctx, cameraX, cameraY, delta) {
 
             // Animácia podľa toho, či sa hráč hýbe
             if (p.moving) {
-                drawCharacterWalk(ctx, p.x - cameraX - 16, p.y - cameraY - 20, p.direction);
+                drawCharacterWalk(ctx, p.x - cameraX - 16, p.y - cameraY - 26, p.direction);
             } else {
-                drawCharacterIdle(ctx, p.x - cameraX - 16, p.y - cameraY - 20, p.direction);
+                drawCharacterIdle(ctx, p.x - cameraX - 16, p.y - cameraY - 26, p.direction);
             }
 
             drawName(ctx, p.name, p.x - cameraX, p.y - cameraY - 10);

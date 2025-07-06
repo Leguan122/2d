@@ -52,17 +52,17 @@ export function updatePlayer(keys) {
          player.moving = true;
      } else {
          player.moving = false;
-         socket.emit('stop_moving', { x: player.x, y: player.y, direction: player.direction });
+         socket.emit('stop_moving', { x: player.x, y: player.y, direction: player.direction, moving: player.moving });
      }
 }
 
 export function drawLocalPlayer(ctx, cameraX, cameraY, drawName) {
     //console.log(player.moving);
     if (player.moving) {
-        drawCharacterWalk(ctx,player.x - cameraX - 16, player.y - cameraY - 16, player.direction);
+        drawCharacterWalk(ctx,player.x - cameraX - 16, player.y - cameraY - 26, player.direction);
     }else {
-        drawCharacterIdle(ctx,player.x - cameraX - 16, player.y - cameraY - 16, player.direction);
+        drawCharacterIdle(ctx,player.x - cameraX - 16, player.y - cameraY - 26, player.direction);
     }
 
-    drawName(ctx, player.name, player.x - cameraX, player.y - cameraY + 40);
+    drawName(ctx, player.name, player.x - cameraX, player.y - cameraY + 30);
 }
