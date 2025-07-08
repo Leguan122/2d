@@ -13,7 +13,7 @@ function initSocket(server) {
     });
 
     console.log('✅ Socket.IO inicializovaný');
-    startTimeBroadcast(io);
+//    startTimeBroadcast(io);
 
     io.on('connection', (socket) => {
         console.log(`🔗 Hráč pripojený: ${socket.id}`);

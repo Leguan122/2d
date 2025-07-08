@@ -2,7 +2,7 @@
 
 let serverTime = {
     startTime: Date.now(),
-    dayLength: 5 * 60 * 1000,      // 5 minút = 1 deň (pre testovanie)
+    dayLength: 0.5 * 60 * 1000,      // 5 minút = 1 deň (pre testovanie)
     seasonLength: 4 * 5 * 60 * 1000, // 4 dni = 1 sezóna
     weather: {
         type: 'sunny',  // sunny, cloudy, rain, storm

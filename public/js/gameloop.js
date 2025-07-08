@@ -16,6 +16,7 @@ canvas.height = window.innerHeight;
 let lastTimestamp = 0;
 
 export function loop(timestamp = 0) {
+    //console.log("loop")
     const delta = timestamp - lastTimestamp;
     lastTimestamp = timestamp;
     update(delta);
@@ -29,15 +30,21 @@ function update(delta) {
 }
 
 function draw(delta) {
+    //console.log("w: ", canvas.width, "h: ", canvas.height);
+    //console.log(window.time)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const cameraX = player.x - canvas.width / 2 + player.size / 2;
-    const cameraY = player.y - canvas.height / 2 + player.size / 2;
+    const cameraX = canvas.width / 2 + player.size / 2;
+    const cameraY = canvas.height / 2 + player.size / 2;
 
-    drawMap(ctx, cameraX, cameraY);
+    //console.log(cameraX, cameraY);
+
+    drawMap(ctx, player.x, player.y);
     drawOtherPlayers(ctx, cameraX, cameraY, delta);
     drawLocalPlayer(ctx, cameraX, cameraY, drawName);
     // Aplikuj filter podľa serverového času
 
-    applyEnvironmentFilter(ctx, window.time);
+    //applyEnvironmentFilter(ctx, window.time);
+
+    //drawHUD(hudctx);
 }

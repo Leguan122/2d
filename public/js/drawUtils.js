@@ -7,8 +7,8 @@ export function drawName(ctx, name, x, y) {
 }
 
 export function drawPosition(ctx, x, y, posX, posY) {
-    ctx.fillStyle = 'gray';
+    ctx.fillStyle = 'black';
     ctx.font = '10px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText(`(${Math.floor(posX)}, ${Math.floor(posY)})`, x + 16, y);
+    ctx.fillText(`(${Math.floor(posX)}, ${Math.floor(posY)})`, x + 32, y);
 }

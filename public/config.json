@@ -1,0 +1,12 @@
+{
+  "tileSize": 8,
+  "visibleTilesX": 30,
+  "visibleTilesY": 25,
+  "playerSpeed": 3,
+  "debugMode": true,
+  "colors": {
+    "background": "#222",
+    "player": "#0f0",
+    "enemy": "#f00"
+  }
+}
