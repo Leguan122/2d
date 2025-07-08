@@ -33,7 +33,7 @@ export function drawCharacterIdle(ctx, x, y, direction = 'down') {
     ctx.drawImage(
         idle_sprite,
         sx, sy, FRAME_WIDTH, FRAME_HEIGHT,
-        x, y - 16, FRAME_WIDTH, FRAME_HEIGHT
+        x, y, FRAME_WIDTH, FRAME_HEIGHT
     );
 }
 
@@ -47,6 +47,6 @@ export function drawCharacterWalk(ctx, x, y, direction = 'down') {
     ctx.drawImage(
         walking_sprite,
         sx, sy, FRAME_WIDTH, FRAME_HEIGHT,
-        x, y - 16, FRAME_WIDTH, FRAME_HEIGHT
+        x, y, FRAME_WIDTH, FRAME_HEIGHT
     );
 }

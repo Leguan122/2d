@@ -31,8 +31,8 @@ export function drawMap(ctx, playerX, playerY) {
             if (map[y] && map[y][x] !== undefined) {
                 const tileId = map[y][x];
 
-                const screenX = (x * TILE_SIZE - playerX) * (TILE_SCREEN_SIZE / TILE_SIZE) + canvas.width / 2;
-                const screenY = (y * TILE_SIZE - playerY) * (TILE_SCREEN_SIZE / TILE_SIZE) + canvas.height / 2;
+                const screenX = (x * TILE_SIZE - playerX) * (TILE_SCREEN_SIZE / TILE_SIZE) + canvas.width / 2 - TILE_SCREEN_SIZE;
+                const screenY = (y * TILE_SIZE - playerY) * (TILE_SCREEN_SIZE / TILE_SIZE) + canvas.height / 2 - TILE_SCREEN_SIZE;
 
                 drawTile(ctx, tileId, screenX, screenY, TILE_SCREEN_SIZE);
             }

@@ -34,6 +34,9 @@ function draw(delta) {
     //console.log(window.time)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    ctx.fillStyle = '#008751';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     const cameraX = canvas.width / 2 + player.size / 2;
     const cameraY = canvas.height / 2 + player.size / 2;
 
@@ -47,4 +50,5 @@ function draw(delta) {
     //applyEnvironmentFilter(ctx, window.time);
 
     //drawHUD(hudctx);
+    //ctx.fillRect(canvas.width / 2, canvas.height / 2, 32, 32);
 }
