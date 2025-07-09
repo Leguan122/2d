@@ -1,7 +1,7 @@
 // js/player.js
 import { socket } from './socketClient.js';
 import { isBlockedTile } from './map.js';
-import {drawCharacterIdle, drawCharacterWalk} from "./character.js";
+import {drawCharacter, drawCharacterIdle, drawCharacterWalk, drawPlayer} from "./character.js";
 import {drawPosition} from "./drawUtils.js";
 
 export const player = {
@@ -12,7 +12,11 @@ export const player = {
     speed: 1,
     name: 'Hráč',
     direction: 'down',
-    moving: 'false'
+    moving: 'false',
+    currentAnimation: 'walk_down',
+    currentFrame: 0,
+    elapsed: 0,
+    flipX: false, // ak je smer doľava
 };
 
 export function setPlayerName(name) {
@@ -59,11 +63,13 @@ export function updatePlayer(keys) {
 
 export function drawLocalPlayer(ctx, cameraX, cameraY, drawName) {
     //console.log(player.moving);
-    if (player.moving) {
-        drawCharacterWalk(ctx,cameraX, cameraY, player.direction);
-    }else {
-        drawCharacterIdle(ctx,cameraX, cameraY, player.direction);
-    }
+    //drawCharacter(ctx,cameraX, cameraY);
+    drawPlayer(ctx, player, cameraX, cameraY);
+    // if (player.moving) {
+    //     drawCharacterWalk(ctx,cameraX, cameraY, player.direction);
+    // }else {
+    //     drawCharacterIdle(ctx,cameraX, cameraY, player.direction);
+    // }
 
     drawName(ctx, player.name, player.x - cameraX, player.y - cameraY + 40);
     drawPosition(ctx,cameraX, cameraY, player.x, player.y);
