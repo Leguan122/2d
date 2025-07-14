@@ -24,6 +24,7 @@ export function setPlayerName(name) {
 }
 
 export function updatePlayer(keys) {
+    let previous_animation = player.currentAnimation;
     let nextX = player.x;
     let nextY = player.y;
     let moved = false;
@@ -32,18 +33,22 @@ export function updatePlayer(keys) {
     if (keys['w']) {
         nextY -= player.speed;
         player.direction = 'up';
+        player.currentAnimation = 'walk_up';
         moved = true;
     } else if (keys['s']) {
         nextY += player.speed;
         player.direction = 'down';
+        player.currentAnimation = 'walk_down';
         moved = true;
     } else if (keys['a']) {
         nextX -= player.speed;
         player.direction = 'left';
+        player.currentAnimation = 'walk_side';
         moved = true;
     } else if (keys['d']) {
         nextX += player.speed;
         player.direction = 'right';
+        player.currentAnimation = 'walk_side';
         moved = true;
     }
 
@@ -57,7 +62,12 @@ export function updatePlayer(keys) {
          player.moving = true;
      } else {
          player.moving = false;
+         player.currentAnimation = 'idle_down';
          socket.emit('stop_moving', { x: player.x, y: player.y, direction: player.direction });
+     }
+
+     if (player.currentAnimation !== previous_animation) {
+         player.currentFrame = 0;
      }
 }
 

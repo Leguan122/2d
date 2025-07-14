@@ -49,5 +49,15 @@ export function isBlockedTile(x, y) {
     if (!map[tileY] || map[tileY][tileX] === undefined) return true;
 
     const tile = map[tileY][tileX];
-    return tile === 30 || tile === 2; // napr. múr alebo strom
+
+    switch (tile) {
+            case 3:
+                return false;
+            case 14:
+                return false;
+
+            default:
+                return true;
+    }
+
 }

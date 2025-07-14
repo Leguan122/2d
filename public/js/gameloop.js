@@ -45,6 +45,7 @@ function draw(delta) {
     drawMap(ctx, player.x, player.y);
     drawOtherPlayers(ctx, cameraX, cameraY, delta);
     drawLocalPlayer(ctx, cameraX, cameraY, drawName);
+    //console.log(delta);
     // Aplikuj filter podľa serverového času
 
     //applyEnvironmentFilter(ctx, window.time);

@@ -9,12 +9,12 @@ const character_sprite = new Image();
 character_sprite.src = '/sprites/AnimationList.png';
 
 export const Animations = {
-    idle_down:  { row: 0, frames: 2, loop: true, frameDuration: 200 },
-    idle_up:    { row: 1, frames: 2, loop: true, frameDuration: 200 },
-    idle_side:  { row: 2, frames: 2, loop: true, frameDuration: 200 },
-    walk_down:  { row: 3, frames: 4, loop: true, frameDuration: 120 },
-    walk_up:    { row: 1, frames: 4, loop: true, frameDuration: 120, startFrame: 2 },
-    walk_side:  { row: 2, frames: 4, loop: true, frameDuration: 120, startFrame: 2 },
+    idle_down:  { row: 0, frames: 2, loop: true, frameDuration: 200, startFrame: 0 },
+    idle_up:    { row: 1, frames: 2, loop: true, frameDuration: 200, startFrame: 0 },
+    idle_side:  { row: 2, frames: 2, loop: true, frameDuration: 200, startFrame: 0 },
+    walk_down:  { row: 3, frames: 4, loop: true, frameDuration: 120, startFrame: 0 },
+    walk_up:    { row: 4, frames: 4, loop: true, frameDuration: 120, startFrame: 0 },
+    walk_side:  { row: 5, frames: 4, loop: true, frameDuration: 120, startFrame: 0 },
     attack_down: { row: 0, frames: 5, loop: false, frameDuration: 90, startFrame: 6 },
     // ... ďalšie animácie
 };
@@ -28,6 +28,7 @@ export function updateCharacterAnimation(deltaTime) {
     if (frameTimer >= frameInterval) {
         frameTimer = 0;
         frameIndex = (frameIndex + 1) % FRAMES_PER_DIRECTION_IDLE;
+        //console.log(frameIndex);
     }
 }
 
@@ -69,20 +70,24 @@ export function drawCharacter (ctx, x, y, animation, direction = 'down') {
 
 export function drawPlayer(ctx, player, cameraX, cameraY, tileWidth = 32, tileHeight = 32) {
     const anim = Animations[player.currentAnimation];
-    const frameX = (anim.startFrame || 0) + player.currentFrame;
+    console.log(anim);
+    const frameX = (anim.startFrame || 0) + player.currentFrame + frameIndex % anim.frames;
     const frameY = anim.row;
 
+
+    //console.log(frameX, frameY);
     ctx.save();
-    if (player.flipX) {
-        ctx.translate(player.x + tileWidth, player.y);
-        ctx.scale(-1, 1); // zrkadlenie
+    if (player.direction === 'left') {
+        //ctx.translate(cameraX, cameraY);
+        //ctx.scale(-1, 1); // zrkadlenie
         ctx.drawImage(character_sprite,
-            frameX * tileWidth, frameY * tileHeight, tileWidth, tileHeight,
-            0, 0, tileWidth, tileHeight
+            frameX * 24, frameY * 24, 24, 24,
+            cameraX, cameraY, 100, 100
         );
     } else {
+        console.log(player.direction);
         ctx.drawImage(character_sprite,
-            frameX * tileWidth, frameY * tileHeight, tileWidth, tileHeight,
+            frameX * 24, frameY * 24, 24, 24,
             cameraX, cameraY, 100, 100
         );
     }
