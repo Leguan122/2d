@@ -1,5 +1,6 @@
 const players = {}; // Objekt so všetkými hráčmi
 const { gameMap } = require('../maps'); // načítaj mapu
+const gameMap1 = require('../maps/empy_map.json');
 
 
 function handlePlayerConnection(socket, io) {
@@ -14,7 +15,7 @@ function handlePlayerConnection(socket, io) {
     };
 
     // Pošli hráčovi mapu
-    socket.emit('initMap', gameMap);
+    socket.emit('initMap', gameMap1);
 
     // Pošli hráčovi jeho ID a ostatných hráčov
     socket.emit('initData', {
