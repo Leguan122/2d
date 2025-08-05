@@ -48,6 +48,10 @@
 //     console.log(`🎯 Viewport: ${viewportTilesX}x${viewportTilesY}, scale: ${scale.toFixed(2)}`);
 // }
 
+function resizeCanvas(canvas) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
 
 
 
@@ -56,6 +60,8 @@ window.addEventListener('resize', () => {
     console.log('Window resized!');
     console.log("ww: ", window.innerWidth, "wh: ", window.innerHeight);
     // tu môžeš napríklad upraviť veľkosť canvasu
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    resizeCanvas(canvas);
+
 });
+
+resizeCanvas(document.getElementById('gameCanvas'));
