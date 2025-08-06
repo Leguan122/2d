@@ -1,6 +1,6 @@
 const players = {}; // Objekt so všetkými hráčmi
 const { gameMap } = require('../maps'); // načítaj mapu
-const gameMap1 = require('../maps/empy_map.json');
+const gameMap1 = require('../maps/empty_map.json');
 
 
 function handlePlayerConnection(socket, io) {

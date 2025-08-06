@@ -10,8 +10,7 @@ function initSocketHandlers(localPlayer, onReady) {
 
     socket.on('initMap', (serverMap) => {
         console.log("mapa");
-        console.log(serverMap);
-        Game.init(serverMap);
+        Game.initMap(serverMap);
     });
 }
 
